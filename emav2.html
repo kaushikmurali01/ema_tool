@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Energy Management Assessment</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Basic reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f5f6fa;
+        color: #333;
+        padding-bottom: 50px;
+      }
+
+      /* Header with logo */
+      .header {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        color: white;
+      }
+
+      .header img {
+        width: 200px;
+        margin-right: 20px;
+      }
+
+      .org-info-page label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .org-info-page input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #000000;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease;
+      }
+
+      .org-info-page input[type="text"]:focus,
+      textarea {
+        border-color: #000000;
+        outline: none;
+      }
+
+      .user-info-page {
+        resize: vertical;
+      }
+
+      /* Container for content */
+      .container {
+        max-width: 850px;
+        margin: 120px auto 50px;
+        padding: 25px;
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .container:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .header h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 32px;
+        color: #00609c;
+        text-align: center;
+        margin-bottom: 0px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 70%;
+      }
+
+      h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 32px;
+        color: #0071b7;
+        text-align: center;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0px;
+      }
+
+      h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      /* Description styling */
+      .description {
+        font-weight: normal;
+        font-size: 18px;
+        color: #666666;
+        margin-bottom: 30px;
+        line-height: 1.6;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      /* Question styling */
+      .question {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 10px;
+      }
+
+      .question label {
+        font-size: 16px;
+        font-weight: normal;
+        flex: 1;
+        margin-right: 80px;
+      }
+
+      .priority-label {
+        font-size: 16px;
+        margin-right: 60px;
+        font-family: "Montserrat", sans-serif;
+        color: #004b75;
+        width: 80px; /* Adjust width based on the length of priorities */
+        text-align: center;
+      }
+
+      input[type="checkbox"] {
+        margin-left: 10px;
+        transform: scale(1.4);
+        accent-color: #00609c;
+        border-radius: 4px;
+        border: 2px solid #00609c;
+        cursor: pointer;
+      }
+
+      /* Buttons */
+      .actions {
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      .actions button {
+        padding: 12px 35px;
+        background-color: #00609c;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .actions button:hover {
+        background-color: #004b75;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Response page */
+      .response-page {
+        display: none;
+        margin-top: 50px;
+      }
+
+      .response-page h2,
+      pre {
+        margin-bottom: 30px;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        color: #666666;
+        padding-left: 10px;
+      }
+
+      .column-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 130px;
+        margin-bottom: 10px;
+        text-align: left;
+        font-family: "Montserrat", sans-serif;
+        color: #004b75;
+        font-size: 18px;
+        margin-top: 50px;
+      }
+
+      .priorities-label {
+        padding-left: 410px;
+        font-family: "Montserrat", sans-serif;
+        color: #004b75;
+        font-size: 18px;
+      }
+
+      .question-label {
+        margin-right: 20px;
+        font-family: "Montserrat", sans-serif;
+        color: #004b75;
+        font-size: 18px;
+      }
+
+      .response-content p {
+        font-size: 16px;
+        line-height: 1.8;
+      }
+
+      .recommendation {
+        color: red;
+        font-weight: bold;
+      }
+
+      /* Styling for recommendations section */
+      .category-response-header {
+        margin-top: 30px;
+        font-size: 22px;
+        color: #00609c;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      /* Hide all categories initially */
+      .category {
+        display: none;
+      }
+
+      /* Show the active category */
+      .category.active {
+        display: block;
+      }
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        .container {
+          margin: 140px auto 50px;
+          padding: 15px;
+        }
+
+        .question label {
+          font-size: 15px;
+        }
+
+        .actions button {
+          font-size: 16px;
+          padding: 10px 25px;
+        }
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #00609c;
+        color: white;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+      }
+
+      input[type="text"],
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        border: 1px solid #000000;
+        border-radius: 6px;
+      }
+
+      #attendee-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  #attendee-list button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  #attendee-list button:hover {
+    background-color: #d94545;
+  }
+
+  #attendee-names{
+    border: 1px solid #000000;
+        border-radius: 6px;
+  }
+
+/* Updated Sidebar Styling */
+.sidebar {
+  position: fixed;
+  top: 103px; /* Sits just below the header */
+  left: 0;
+  width: 250px;
+  height: calc(99% - 135px); /* Avoids the header (70px) and footer (50px) */
+  background-color: #00578d; /* Matches the application theme */
+  color: white;
+  padding-top: 3px;
+  border-right: 1px solid #ddd; /* Subtle border for separation */
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: hidden; /* Scroll if content exceeds height */
+  border-radius: 0 15px 15px 0; /* Rounded top-left and bottom-left corners */
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2); /* Enhance depth */
+  overflow: hidden; /* Prevent child elements from overflowing */
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-family: "Montserrat", sans-serif;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  color: white;
+  text-transform: capitalize;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-menu li:hover {
+  background-color: #1f76f7a4; /* Slightly lighter hover color */
+  color: #e0f0ff; /* Light text color for hover */
+}
+
+.sidebar-menu li.active {
+  background-color: #1f76f7a4; /* Slightly brighter active color */
+  color: #fff; /* White text for active item */
+  font-weight: bold;
+}
+
+.sidebar-menu li a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.sidebar-menu li a:hover {
+  text-decoration: none;
+}
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <img class="logo" src="./img.svg" alt="Logo" />
+      <h1>Energy Management Assessment</h1>
+    </div>
+
+    <!-- User Information Page (NEW) -->
+    <div class="container" id="org-page">
+      <div class="org-info-page" id="user-info-page">
+        <h1>Organization Information</h1>
+        <form id="user-info-form">
+          <div class="form-group">
+            <label for="application-name">Application ID:</label>
+            <input type="text" id="application-name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="organization-name">Organization Name:</label>
+            <input type="text" id="organization-name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="organization-type">Facility Type:</label>
+      <select id="organization-type">
+        <option value="11 - Agriculture, forestry, fishing and hunting">11 - Agriculture, forestry, fishing and hunting</option>
+        <option value="21 - Mining, quarrying, and oil and gas extraction">21 - Mining, quarrying, and oil and gas extraction</option>
+        <option value="22 - Utilities">22 - Utilities</option>
+        <option value="23 - Construction">23 - Construction</option>
+        <option value="31-32-33 - Manufacturing">31-32-33 - Manufacturing</option>
+        <option value="48 - Transportation">48 - Transportation</option>
+        <option value="56 - Administrative and support, waste management and remediation services">56 - Administrative and support, waste management and remediation services</option>
+      </select>
+          </div>
+
+          <div class="form-group">
+            <label for="site-address">Facility Address:</label>
+            <input type="text" id="site-address" required />
+          </div>
+
+          <div class="form-group">
+            <label for="facilitator-name">Facilitator Name:</label>
+            <select id="facilitator-name" required>
+              <option value="">Select a Facilitator</option>
+            </select>
+          </div>
+          
+
+          <div class="form-group">
+            <label for="attendee-names">Attendee Name:</label>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px">
+              <input
+                type="text"
+                id="attendee-names"
+                placeholder="Enter attendee name"
+                style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; border: 1px solid #000000;
+        border-radius: 6px;"
+              />
+              <button
+                type="button"
+                id="add-attendee-btn"
+                style="padding: 10px 20px; background-color: #0071b7; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-bottom:15px"
+              >
+                Add
+              </button>
+            </div>
+            <ul id="attendee-list" style="list-style-type: none; padding: 0; margin: 0;">
+            </ul>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="start-assessment">
+              Start Assessment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Container for Assessment Questions -->
+    <div
+      class="container"
+      id="categories-container"
+      style="display: none"
+    ></div>
+    <div id="sidebar" class="sidebar" style="display: none;">
+      <ul class="sidebar-menu">
+        <!-- Sidebar items will be dynamically generated -->
+      </ul>
+    </div>
+    
+
+    <!-- Response Page -->
+    <div class="container" id="response-page" style="display: none">
+      <h2><pre>  You Have Completed the Energy Management Assessment</pre></h2>
+      <div id="response-content"></div>
+      <div class="actions">
+        <button class="back" id="back-to-assessment">Back to Assessment</button>
+      </div>
+      <div class="actions">
+        <button id="download-pdf">Download Report as PDF</button>
+      </div>
+    </div>
+
+    <!-- Radar Chart Container -->
+    <div class="container" id="chart-container" style="display: none">
+      <h1>Energy Management Scores</h1>
+      <canvas id="radarChart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="footer">
+      <p>© 2024 Energy Management Assessment</p>
+    </div>
+
+    <!-- jsPDF Script for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+      let responses = {};
+      let recommendations = {};
+      let currentCategory = "category-1"; // Track the active category
+      let tableBody = [];
+      let radarChart = null;
+      let categoryScores = {};
+      const attendeeList = []; // Array to store attendee names
+      const attendeeInput = document.getElementById("attendee-names");
+      const attendeeListElement = document.getElementById("attendee-list");
+      const categoryDescriptions = {
+        "Management Commitment": "Assessment of the level of executive involvement in promoting and deploying energy management in your organization.",
+        "Resources": "Assessment of your organization’s current financial and human resources as required for energy management, including budgets and energy teams.",
+        "Energy Review, Analysis, and Targets": "Assessment of your organization’s energy consumption and the establishment of relevant KPIs and targets to improve energy performance.",
+        "Monitoring": "Assessment of your organization’s process for monitoring energy consumption and continually analyzing data.",
+        "Action plans, Reporting, Review and Reassessment": "Assessment of your organization’s specific plans related to energy management and how your organization manages flow of information and responds to assessment results.",
+        "Operations and Maintenance": "The degree to which your organization has integrated energy management into regular business operations.",
+        "Employee Engagement": "The level of employees’ awareness of and involvement in your organization’s energy management policy, consumption and savings.",
+        "Procurement and Design": "The degree to which your organization includes energy in the design of purchasing policies for equipment and supplies.",
+        "Documentation and Records": "Assessment of how your organization documents energy-related operational processes and manages these records over time.",
+        "Energy Management System Audits": "Assessment of your organization’s process for periodically evaluating your energy management practices as a whole.",
+      };
+      const allCategories = [
+  "Management Commitment",
+  "Resources",
+  "Energy Review, Analysis, and Targets",
+  "Monitoring",
+  "Action plans, Reporting, Review and Reassessment",
+  "Operations and Maintenance",
+  "Employee Engagement",
+  "Procurement and Design",
+  "Documentation and Records",
+  "Energy Management System Audits",
+];
+
+      const userinfo = {}
+
+  // Function to render the list of attendees
+  function renderAttendees() {
+    attendeeListElement.innerHTML = ""; // Clear existing list
+    attendeeList.forEach((name, index) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = name;
+
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      removeBtn.style.marginLeft = "10px";
+      removeBtn.style.backgroundColor = "#ff6b6b";
+      removeBtn.style.color = "white";
+      removeBtn.style.border = "none";
+      removeBtn.style.borderRadius = "4px";
+      removeBtn.style.cursor = "pointer";
+      removeBtn.onclick = () => {
+        attendeeList.splice(index, 1); // Remove attendee from array
+        renderAttendees(); // Re-render list
+      };
+
+      listItem.appendChild(removeBtn);
+      attendeeListElement.appendChild(listItem);
+    });
+  }
+
+  // Add button click event
+  document.getElementById("add-attendee-btn").addEventListener("click", () => {
+    const name = attendeeInput.value.trim();
+    if (name) {
+      attendeeList.push(name); // Add name to array
+      attendeeInput.value = ""; // Clear input
+      renderAttendees(); // Re-render list
+    } else {
+      alert("Please enter a name!");
+    }
+  });
+      
+
+      async function fetchFacilitators() {
+  try {
+    const response = await fetch("http://localhost:3000/facilitators");
+    const facilitators = await response.json();
+
+    const facilitatorDropdown = document.getElementById("facilitator-name");
+    facilitators.forEach((facilitator) => {
+      const option = document.createElement("option");
+      option.value = facilitator.name; // Use MongoDB's `_id` field
+      option.textContent = facilitator.name;
+      facilitatorDropdown.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error fetching facilitators:", error);
+  }
+}
+
+async function fetchFacilitators() {
+  try {
+    const response = await fetch("http://localhost:3000/facilitators");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const facilitators = await response.json();
+    const facilitatorDropdown = document.getElementById("facilitator-name");
+    
+    // Clear existing options (if any)
+    facilitatorDropdown.innerHTML = `
+      <option value="" disabled selected>Select a Facilitator</option>
+    `;
+
+    // Populate the dropdown with facilitator names
+    facilitators.forEach((facilitator) => {
+      const option = document.createElement("option");
+      option.value = facilitator.name; // Use the facilitator's unique ID
+      option.textContent = facilitator.name;
+      facilitatorDropdown.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error fetching facilitators:", error);
+  }
+}
+
+// Call the function on page load
+document.addEventListener("DOMContentLoaded", fetchFacilitators);
+
+async function fetchEMAScores(facilityType) {
+  try {
+    const response = await fetch(`http://localhost:3000/ema-scores?facilityId=${facilityType}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching EMA scores:", error);
+    return [];
+  }
+}
+
+
+// // Fetch questions from the backend and populate the `data` variable
+// async function fetchQuestionsAndPopulateData() {
+//   try {
+//     const response = await fetch("http://localhost:3000/questions");
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
+
+//     const questions = await response.json();
+
+//     // Group questions by category
+//     const groupedQuestions = questions.reduce((acc, question) => {
+//       if (!acc[question.category]) {
+//         acc[question.category] = {
+//           category: question.category,
+//           description: categoryDescriptions[question.category], // Customize if needed
+//           questions: [],
+//         };
+//       }
+//       acc[question.category].questions.push({
+//         question: question.question,
+//         recommendation: question.recommendation,
+//         priority: question.priority,
+//       });
+//       return acc;
+//     }, {});
+
+//     // Update the global data variable
+//     data = Object.values(groupedQuestions);
+
+//   } catch (error) {
+//     console.error("Error fetching questions:", error);
+//   }
+// }
+
+async function fetchQuestionsAndPopulateData() {
+  try {
+    const response = await fetch("http://localhost:3000/questions");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const questions = await response.json();
+
+    // Group questions by category
+    const groupedQuestions = questions.reduce((acc, question) => {
+      if (!acc[question.category]) {
+        acc[question.category] = {
+          category: question.category,
+          description: categoryDescriptions[question.category] || "",
+          questions: [],
+        };
+      }
+      acc[question.category].questions.push({
+        question: question.question,
+        recommendation: question.recommendation,
+        priority: question.priority,
+      });
+      return acc;
+    }, {});
+
+    // Ensure all categories in `allCategories` are present
+    data = allCategories.map((categoryName) => {
+      return (
+        groupedQuestions[categoryName] || {
+          category: categoryName,
+          description: categoryDescriptions[categoryName] || "",
+          questions: [], // Empty if no questions
+        }
+      );
+    });
+
+    console.log("Prepared Data:", data); // Debug the prepared data
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+  }
+}
+
+// Call the function on page load
+document.addEventListener("DOMContentLoaded", fetchQuestionsAndPopulateData);
+
+
+      // Assign priorities (1 to 5) to each category question and calculate scores
+      function calculateCategoryScores() {
+        // Example priority array: priority for each question (dummy values for example)
+        categoryScores = {};
+        overallScore = 0.0;
+
+        data.forEach((categoryData, categoryIndex) => {
+          let totalScore = 0;
+          let priorityBuckets = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Keeps the count of checked questions for each priority
+          let totalQuestionsForPriority = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Keeps the total number of questions for each priority
+
+          // Loop through each question in the category
+          categoryData.questions.forEach((q, qIndex) => {
+            const checkbox = document.getElementById(
+              `q${categoryIndex + 1}-${qIndex}`
+            );
+            const isChecked = checkbox.checked ? 1 : 0;
+            const priority = q.priority; // Assume priority is assigned to each question
+
+            // Track total questions and checked ones for each priority
+            totalQuestionsForPriority[priority]++;
+            if (isChecked) {
+              priorityBuckets[priority] += 1; // Add to checked responses
+            }
+          });
+
+          // Calculate the average for each priority and sum them
+          Object.keys(priorityBuckets).forEach((priority) => {
+            const checkedCount = priorityBuckets[priority];
+            const totalCount = totalQuestionsForPriority[priority];
+
+            // Calculate the average for the priority level and add to the total score
+            const avgScoreForPriority =
+              totalCount > 0 ? checkedCount / totalCount : 0;
+            totalScore += avgScoreForPriority; // Sum of averages across priorities
+          });
+
+          // Store the score for this category (could be a decimal)
+          categoryScores[categoryData.category] = totalScore;
+          overallScore += totalScore;
+        });
+      }
+
+      async function showChart() {
+  // Calculate category scores from the frontend
+  calculateCategoryScores();
+
+  // Fetch EMA scores for the selected facility type
+  const facilityType = document.getElementById("organization-type").value;
+  // const backendScores = await fetchEMAScores(userinfo.orgType);
+
+  // // Map backend scores to categories for the radar chart
+  // const backendScoresMap = backendScores.reduce((acc, score) => {
+  //   acc[score.category] = score.score;
+  //   return acc;
+  // }, {});
+  const backendScores = await fetchEMAScores(userinfo.orgType);
+  const backendScoresMap = allCategories.reduce((acc, category) => {
+  const matchingScore = backendScores.find(
+    (score) => score.facilityId === userInfo.orgType && score.category === category
+  );
+  acc[category] = matchingScore ? matchingScore.score : 0; // Assign actual score or 0 if no match
+  return acc;
+}, {});
+
+
+  // Combine backend and frontend scores
+  const labels = Object.keys(categoryScores);
+  const frontendData = labels.map((category) => parseFloat((categoryScores[category] || 0).toFixed(2)));
+  const backendData = labels.map((category) => parseFloat((backendScoresMap[category] || 0).toFixed(2)));
+
+  // Destroy existing chart if it exists
+  if (radarChart) {
+    radarChart.destroy();
+  }
+
+  // Create radar chart
+  const ctx = document.getElementById("radarChart").getContext("2d");
+  radarChart = new Chart(ctx, {
+    type: "radar",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Your Score",
+          data: frontendData,
+          backgroundColor: "rgba(0, 123, 255, 0.2)",
+          borderColor: "rgba(0, 123, 255, 1)",
+        },
+        {
+          label: "Average Score",
+          data: backendData,
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(255, 99, 132, 1)",
+        },
+      ],
+    },
+    options: {
+      scales: {
+        r: {
+          min: 0,
+          max: 5,
+          ticks: {
+            stepSize: 1,
+            callback: (value) => value.toFixed(0),
+          },
+        },
+      },
+      plugins: {
+      title: {
+        display: true,
+        text: "Facility Type:   ".concat(userInfo.orgType), // Title text
+        font: {
+          size: 18, // Font size for the title
+          weight: "bold", // Font weight
+        },
+        padding: {
+          top: 10,
+          bottom: 20, // Space between title and chart
+        },
+      },
+    },
+    },
+  });
+
+  document.getElementById("chart-container").style.display = "block";
+}
+
+function buildCategories() {
+  const container = document.getElementById("categories-container");
+  container.innerHTML = ""; // Clear existing content
+
+  data.forEach((categoryData, index) => {
+    const categoryDiv = document.createElement("div");
+    categoryDiv.id = `category-${index + 1}`;
+    categoryDiv.classList.add("category");
+    if (index === 0) categoryDiv.classList.add("active"); // First category active by default
+
+    categoryDiv.innerHTML = `
+      <h2>${categoryData.category}</h2>
+      <p class="description">${categoryData.description}</p>
+      <div class="column-head">
+        <h2 class="question-label">Question</h2>
+        <h2 class="priorities-label">Priority</h2>
+      </div>
+      ${categoryData.questions
+        .map(
+          (q, qIndex) => `
+            <div class="question">
+              <label for="q${index + 1}-${qIndex}">${q.question}</label>
+              <span class="priority-label">${q.priority}</span>
+              <input type="checkbox" id="q${index + 1}-${qIndex}" 
+                     data-category="${categoryData.category}" 
+                     data-recommendation="${q.recommendation}">
+            </div>
+          `
+        )
+        .join("")}
+      <div class="actions">
+        ${
+          index > 0
+            ? `<button class="previous" data-target="category-${index}">Previous</button>`
+            : ""
+        }
+        ${
+          index < data.length - 1
+            ? `<button class="next" data-target="category-${index + 2}">Next</button>`
+            : '<button class="next" id="show-response">Show Responses</button>'
+        }
+      </div>
+    `;
+
+    container.appendChild(categoryDiv);
+  });
+
+  console.log("Categories Built Successfully"); // Debug to confirm the function is called
+}
+
+// Function to build the sidebar
+function buildSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const sidebarMenu = document.querySelector(".sidebar-menu");
+  sidebarMenu.innerHTML = ""; // Clear previous items
+
+  data.forEach((categoryData, index) => {
+    const menuItem = document.createElement("li");
+    menuItem.textContent = categoryData.category;
+
+    menuItem.addEventListener("click", () => {
+      showPage(`category-${index + 1}`); // Show corresponding category
+      document.querySelectorAll(".sidebar-menu li").forEach((li) => li.classList.remove("active"));
+      menuItem.classList.add("active");
+    });
+
+    // Mark first category as active by default
+    if (index === 0) menuItem.classList.add("active");
+
+    sidebarMenu.appendChild(menuItem);
+  });
+
+  sidebar.style.display = "block"; // Show the sidebar
+}
+
+// Call this function after the org info page is completed
+document.getElementById("start-assessment").addEventListener("click", () => {
+  buildSidebar();
+});
+// Function to handle sidebar navigation
+// function buildSidebar() {
+//   const sidebar = document.getElementById("sidebar");
+//   const sidebarMenu = document.querySelector(".sidebar-menu");
+//   sidebarMenu.innerHTML = ""; // Clear previous items
+
+//   data.forEach((categoryData, index) => {
+//     const menuItem = document.createElement("li");
+//     menuItem.textContent = categoryData.category;
+
+//     menuItem.addEventListener("click", () => {
+//       // Highlight the active sidebar item
+//       document.querySelectorAll(".sidebar-menu li").forEach((li) => li.classList.remove("active"));
+//       menuItem.classList.add("active");
+
+//       // Show the corresponding category page
+//       showPage(`category-${index + 1}`);
+//     });
+
+//     // Mark first category as active by default
+//     if (index === 0) menuItem.classList.add("active");
+
+//     sidebarMenu.appendChild(menuItem);
+//   });
+
+//   sidebar.style.display = "block"; // Show the sidebar
+// }
+
+
+      function enableNextCheckboxes() {
+        data.forEach((categoryData, categoryIndex) => {
+          categoryData.questions.forEach((q, qIndex) => {
+            const checkbox = document.getElementById(
+              `q${categoryIndex + 1}-${qIndex}`
+            );
+            const nextCheckbox = document.getElementById(
+              `q${categoryIndex + 1}-${qIndex + 1}`
+            );
+
+            checkbox.addEventListener("change", function () {
+              if (this.checked) {
+                if (nextCheckbox) {
+                  nextCheckbox.closest(".question").style.display = "flex"; // Show the next checkbox container
+                  nextCheckbox.disabled = false; // Enable next checkbox
+                }
+              } else {
+                // Disable and hide all following checkboxes if current one is unchecked
+                for (
+                  let i = qIndex + 1;
+                  i < categoryData.questions.length;
+                  i++
+                ) {
+                  const followingCheckbox = document.getElementById(
+                    `q${categoryIndex + 1}-${i}`
+                  );
+                  followingCheckbox.checked = false;
+                  followingCheckbox.disabled = true;
+                  followingCheckbox.closest(".question").style.display = "none"; // Hide the container
+                }
+              }
+            });
+
+            // Initially, hide all checkboxes except the first in each category
+            if (qIndex > 0) {
+              checkbox.closest(".question").style.display = "none"; // Hide the checkbox container
+              checkbox.disabled = true; // Disable checkbox
+            }
+          });
+        });
+      }
+
+      // Show a specific category
+      function showPage(pageId) {
+        currentCategory = pageId; // Track the current category
+        document.getElementById("chart-container").style.display = "none";
+        document.getElementById("response-page").style.display = "none";
+        const pages = document.querySelectorAll(".category");
+        pages.forEach((page) => page.classList.remove("active"));
+        const pageToShow = document.getElementById(pageId);
+        pageToShow.classList.add("active");
+
+        // Ensure the corresponding sidebar item is active
+  const sidebarItems = document.querySelectorAll(".sidebar-menu li");
+  sidebarItems.forEach((item, index) => {
+    if (`category-${index + 1}` === pageId) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+      }
+
+      // Save responses and recommendations
+      function saveResponses() {
+        responses = {};
+        recommendations = {};
+
+        document.querySelectorAll(".question input").forEach((input) => {
+          const questionText = input.previousElementSibling.innerText;
+          const category = input.getAttribute("data-category");
+          const recommendation = input.getAttribute("data-recommendation");
+          const answer = input.checked ? "Yes" : "No";
+
+          if (!responses[category]) {
+            responses[category] = [];
+            recommendations[category] = [];
+          }
+
+          responses[category].push({ question: questionText, answer });
+
+          if (answer === "No" && recommendation) {
+            recommendations[category].push(recommendation);
+          }
+        });
+        console.log(1);
+        console.log(recommendations);
+        calculateCategoryScores();
+      }
+
+      // Show response page with category-wise layout and grouped recommendations
+      function showResponsePage() {
+        saveResponses();
+        showChart();
+        const responsePage = document.getElementById("response-page");
+        const responseContent = document.getElementById("response-content");
+        const chartContent = document.getElementById("response-content");
+        responseContent.innerHTML = "";
+
+        document.getElementById("org-page").style.display = "none";
+        responsePage.style.display = "block";
+        chartContent.style.display = "block";
+        document
+          .querySelectorAll(".category")
+          .forEach((category) => category.classList.remove("active"));
+        generateReport();
+      }
+
+      // Event listeners for buttons
+      function addNavigationListeners() {
+        document.querySelectorAll(".next").forEach((button) => {
+          button.addEventListener("click", function () {
+            const targetPage = this.getAttribute("data-target");
+            if (this.id === "show-response") {
+              document.getElementById("categories-container").style.display =
+                "none";
+              document.getElementById("response-page").style.display = "block";
+              document.getElementById("chart-container").style.display =
+                "block";
+              document.getElementById("sidebar").style.display =
+                "none";
+              showResponsePage();
+            } else {
+              showPage(targetPage);
+            }
+          });
+        });
+
+        document.querySelectorAll(".previous").forEach((button) => {
+          button.addEventListener("click", function () {
+            const targetPage = this.getAttribute("data-target");
+            showPage(targetPage);
+          });
+        });
+
+        document
+          .getElementById("back-to-assessment")
+          .addEventListener("click", function () {
+            document.getElementById("response-page").style.display = "none"; // Hide response page
+            document.getElementById("chart-container").style.display = "none"; // Hide chart
+            document.getElementById("categories-container").style.display =
+              "block"; // Show assessment categories
+              document.getElementById("sidebar").style.display =
+              "block"; // Show sidebar navigation
+            showPage(currentCategory); // Return to the first category or current category if needed
+          });
+      }
+
+      // Initialize
+      function init() {
+        buildCategories();
+        enableNextCheckboxes();
+        addNavigationListeners();
+      }
+
+      // Run the initialization
+
+      // Function to capture user info and start assessment (NEW)
+      document
+        .getElementById("start-assessment")
+        .addEventListener("click", function () {
+          userInfo = {
+            appId: document.getElementById("application-name").value,
+            orgName: document.getElementById("organization-name").value,
+            orgType: document.getElementById("organization-type").value,
+            siteAddress: document.getElementById("site-address").value,
+            facilitatorName: document.getElementById("facilitator-name").value,
+            attendeeNames: attendeeList
+          };
+
+          // Save to localStorage
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+          // Show assessment questions, hide user info
+          document.getElementById("org-page").style.display = "none";
+          document.getElementById("categories-container").style.display =
+            "block";
+
+          // Example function to load questions (use your actual function)
+          init();
+        });
+
+      // Function to generate the report
+      function generateReport() {
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        const reportContent = `
+        <p><strong>Organization Name:</strong> ${userInfo.appId}</p>
+        <p><strong>Organization Name:</strong> ${userInfo.orgName}</p>
+        <p><strong>Organization Type:</strong> ${userInfo.orgType}</p>
+        <p><strong>Site Address:</strong> ${userInfo.siteAddress}</p>
+        <p><strong>Facilitator Name:</strong> ${userInfo.facilitatorName}</p>
+        <p><strong>Attendee Names:</strong> ${userInfo.attendeeNames.join(
+          ", "
+        )}</p>`;
+
+        tableBody = [];
+
+        Object.keys(recommendations).forEach((category) => {
+          const recommendation = recommendations[category]
+            ? recommendations[category].join("\n\n") // Concatenate multiple recommendations if any
+            : "None";
+
+          if (Object.keys(recommendations[category]).length != 0) {
+            tableBody.push([
+              category, // Category name
+              recommendation, // Recommendation
+            ]);
+          }
+        });
+
+        document.getElementById("response-page").style.display = "block";
+      }
+
+      // Function to generate the PDF report with proper formatting
+      document
+        .getElementById("download-pdf")
+        .addEventListener("click", function () {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          // Add title
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(20);
+          doc.text("Energy Management Assessment Report", 14, 20);
+          doc.setFont("helvetica", "normal");
+
+          // Add organization information
+          const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+          doc.setFontSize(12);
+          doc.text(`Application ID: ${userInfo.appId}`, 14, 30);
+          doc.text(`Organization Name: ${userInfo.orgName}`, 14, 40);
+          doc.text(`Facility Type: ${userInfo.orgType}`, 14, 50);
+          doc.text(`Facility Address: ${userInfo.siteAddress}`, 14, 60);
+          doc.text(`Facilitator Name: ${userInfo.facilitatorName}`, 14, 70);
+          doc.text(
+            `Attendee Names: ${userInfo.attendeeNames.join(", ")}`,
+            14,
+            80
+          );
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(20);
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "normal");
+          doc.text(
+            "Congratulations on completing your Energy Management Assessment (EMA)!",
+            14,
+            110
+          );
+          doc.text(
+            "In this report, you can review your assessment results and recommended priority actions",
+            14,
+            116
+          );
+          doc.text(
+            "to improve your organization’s Strategic Energy Management (SEM) practices.",
+            14,
+            122
+          );
+
+          // doc.setFontSize(14);
+          // doc.setFont("helvetica", "bold");
+          // doc.text("Your Overall Score", 14, 130);
+          // doc.setFontSize(12);
+          // doc.setFont("helvetica", "normal");
+          // doc.text("How well are you managing energy?", 14, 136);
+          // doc.text(
+          //   `Your organization has scored ${overallScore}% overall.`,
+          //   14,
+          //   142
+          // );
+
+          // Generate radar chart image from canvas
+          const chartCanvas = document.getElementById("radarChart");
+          const chartImg = chartCanvas.toDataURL("image/png");
+
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(16);
+
+          // Add a line break before starting assessment results
+          doc.text("Assessment Results", 14, 100);
+          doc.setFont("helvetica", "normal");
+
+          // Add radar chart to PDF
+          doc.addImage(chartImg, "PNG", 15, 145, 170, 140);
+
+          doc.addPage();
+          // Add recommendations as a table
+          doc.setFontSize(14);
+          doc.setFont("helvetica", "bold");
+          doc.text("Recommendations For Your Organization", 14, 26);
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "normal");
+          doc.text(
+            "The following recommended actions are prioritized for you based on your level of performance",
+            14,
+            32
+          );
+          doc.text(
+            "in each of the 10 components of energy management:",
+            14,
+            38
+          );
+
+          // Add user responses
+          const reportContent =
+            document.getElementById("response-content").innerHTML;
+          const plainTextContent = reportContent.replace(/<[^>]*>/g, ""); // Strip HTML tags
+
+          // AutoTable for better formatting
+          doc.autoTable({
+            startY: 45,
+            head: [["Category", "Recommendations"]],
+            body: tableBody,
+            theme: "grid",
+            headStyles: { fillColor: [0, 96, 156], halign: "center" }, // Custom color for table header
+            styles: { fontSize: 10, halign: "left" },
+            willDrawCell: (data) => {
+              if (data.row.index === 0 && data.pageCount > 1) {
+                data.cell.styles.fillColor = false; // Makes the header invisible after the first page
+              }
+            },
+          });
+
+          doc.setFontSize(9);
+          // Add footer with page numbers
+          const pageCount = doc.internal.getNumberOfPages();
+          for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.text(
+              `Page ${i} of ${pageCount}`,
+              190,
+              290,
+              null,
+              null,
+              "right"
+            );
+          }
+
+          // Save the generated PDF
+          doc.save("Energy-Management-Assessment-Report.pdf");
+        });
+
+      // Function to capture responses (use your actual logic)
+    </script>
+  </body>
+</html>
