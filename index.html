@@ -847,6 +847,11 @@ async function fetchFacilitators() {
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", fetchFacilitators);
 
+document.addEventListener("DOMContentLoaded", function () {
+  // Clear MSAL cache to avoid stale interaction states
+  msalInstance.clearCache();
+});
+
 async function fetchEMAScores(facilityType) {
   try {
     const response = await fetch(`http://localhost:3000/ema-scores?facilityId=${facilityType}`);
