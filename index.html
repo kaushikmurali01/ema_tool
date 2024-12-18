@@ -1912,7 +1912,7 @@ async function getListItemByApplicationId(accessToken, applicationId) {
     }
 
     // Get the DocumentLibrary field
-    const documentLibraryLink = matchingItem.fields.documentLibraryUrl.Url;
+    const documentLibraryLink = matchingItem.fields.documentLibrary.Url;
 
     if (!documentLibraryLink) {
       throw new Error(`Document Library link not found for Application ID: ${applicationId}`);
