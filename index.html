@@ -1927,7 +1927,8 @@ async function getListItemByApplicationId(accessToken, applicationId) {
 
 async function uploadFileToDocumentLibrary(libraryUrl, file, accessToken) {
   try {
-    const uploadUrl = `${libraryUrl}/${file.name}:/content`;
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    const uploadUrl = `${proxyUrl}${libraryUrl}/${file.name}:/content`;
     const response = await fetch(uploadUrl, {
       method: "PUT",
       headers: {
