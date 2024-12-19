@@ -1980,8 +1980,7 @@ async function uploadFileToDocumentLibrary(file) {
         // Step 2: Fetch the Document Library URL using the Application ID
         const documentLibraryUrl = await getListItemByApplicationId(accessToken, applicationId);
 
-        // Step 3: Fetch the SharePoint Site and Drive IDs
-        const siteId = await getSharePointSiteId(accessToken);
+        // Step 3: Fetch the SharePoint Site and Drive ID
         const driveId = `b!1lIwvqtQjUeQ4NoLYBC-xHhW9slCU4xFjgoMJajS_JSZlcK5T3QaSK4ZRUcd-IMR`;
         
         // Step 4: Derive Folder Path and Create if Needed
@@ -2743,7 +2742,6 @@ document.getElementById("upload-docx").addEventListener("click", async function 
     const accessToken = await acquireTokenWithInteractionCheck();
 
     // Step 2: Fetch SharePoint Site and Drive IDs
-    const siteId = await getSharePointSiteId(accessToken);
     const driveId = `b!1lIwvqtQjUeQ4NoLYBC-xHhW9slCU4xFjgoMJajS_JSZlcK5T3QaSK4ZRUcd-IMR`;
 
     // Step 3: Specify Folder Path and Create if Needed
