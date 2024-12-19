@@ -1958,10 +1958,8 @@ async function uploadFileToDocumentLibrary(file) {
       }
 
       const result = await response.json();
-      document.getElementById("status").innerText = "File uploaded successfully!";
       console.log("Upload result:", result);
     } catch (error) {
-      document.getElementById("status").innerText = `Error: ${error.message}`;
       console.error("Upload error:", error);
     }
 }
