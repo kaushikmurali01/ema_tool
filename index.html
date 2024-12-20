@@ -1704,7 +1704,7 @@ function clearPreviousInteractions() {
 // Upload File to SharePoint
 async function uploadFile(driveId, folderPath, file, accessToken) {
   const fileName = file.name; // Get the name of the file
-  const uploadUrl = `https://graph.microsoft.com/v1.0/drives/${driveId}/root:/${folderPath}/${fileName}:/content`;
+  const uploadUrl = `https://graph.microsoft.com/v1.0/drives/${driveId}/root:/${folderPath}/FRA/${fileName}:/content`;
 
   try {
     const response = await fetch(uploadUrl, {
