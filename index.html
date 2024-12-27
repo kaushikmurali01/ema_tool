@@ -816,7 +816,7 @@
 
       async function fetchFacilitators() {
   try {
-    const response = await fetch("http://localhost:3000/facilitators");
+    const response = await fetch("https://ema-backend-5r0j.onrender.com/facilitators");
     const facilitators = await response.json();
 
     const facilitatorDropdown = document.getElementById("facilitator-name");
@@ -833,7 +833,7 @@
 
 async function fetchFacilitators() {
   try {
-    const response = await fetch("http://localhost:3000/facilitators");
+    const response = await fetch("https://ema-backend-5r0j.onrender.com/facilitators");
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -864,7 +864,7 @@ document.addEventListener("DOMContentLoaded", fetchFacilitators);
 
 async function fetchEMAScores(facilityType) {
   try {
-    const response = await fetch(`http://localhost:3000/ema-scores?facilityId=${facilityType}`);
+    const response = await fetch(`https://ema-backend-5r0j.onrender.com/ema-scores?facilityId=${facilityType}`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -879,7 +879,7 @@ async function fetchEMAScores(facilityType) {
 // // Fetch questions from the backend and populate the `data` variable
 // async function fetchQuestionsAndPopulateData() {
 //   try {
-//     const response = await fetch("http://localhost:3000/questions");
+//     const response = await fetch("https://ema-backend-5r0j.onrender.com/questions");
 //     if (!response.ok) {
 //       throw new Error(`HTTP error! Status: ${response.status}`);
 //     }
@@ -913,7 +913,7 @@ async function fetchEMAScores(facilityType) {
 
 async function fetchQuestionsAndPopulateData() {
   try {
-    const response = await fetch("http://localhost:3000/questions");
+    const response = await fetch("https://ema-backend-5r0j.onrender.com/questions");
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
